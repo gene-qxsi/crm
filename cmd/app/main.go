@@ -37,10 +37,9 @@ func main() {
 
 	// рендеринг страниц
 	router.Get("/", sh.ShowIndex)
-	router.Get("/register", sh.ShowRegistration)
-	router.Get("/login", sh.ShowLogin)
+	router.Get("/register", sh.ShowRegister)
 	router.Get("/admin_info", sh.ShowAdminInfo)
-	router.Get("/app", sh.ShowApp)
+	router.Get("/login", sh.ShowLogin)
 	router.Get("/logout", sh.ShowLogout)
 	http.ListenAndServe(":8080", router)
 

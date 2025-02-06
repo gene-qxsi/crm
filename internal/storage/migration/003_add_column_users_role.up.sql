@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD COLUMN role VARCHAR(5) NOT NULL CHECK(role = 'ADMIN' OR role = 'USER')

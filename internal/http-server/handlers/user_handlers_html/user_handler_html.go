@@ -40,8 +40,9 @@ func (h *UserhandlerHTML) CreateUser(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	age, _ := strconv.Atoi(r.FormValue("age"))
 	password := r.FormValue("password")
+	role := r.FormValue("role")
 
-	user := models.User{Name: name, Age: age, Password: password}
+	user := models.User{Name: name, Age: age, Password: password, Role: role}
 
 	_, err = h.service.CreateUser(user)
 	if err != nil {
@@ -96,6 +97,7 @@ func (h *UserhandlerHTML) GetUser(w http.ResponseWriter, r *http.Request) {
 	data.Add("name", user.Name)
 	data.Add("age", strconv.Itoa(user.Age))
 	data.Add("password", user.Password)
+	data.Add("role", user.Role)
 
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write([]byte(data.Encode()))
@@ -125,16 +127,17 @@ func (h *UserhandlerHTML) GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
-	val := url.Values{}
+	data := url.Values{}
 	for _, u := range users {
-		val.Add("id", strconv.Itoa(u.ID))
-		val.Add("name", u.Name)
-		val.Add("age", strconv.Itoa(u.Age))
-		val.Add("password", u.Password)
+		data.Add("id", strconv.Itoa(u.ID))
+		data.Add("name", u.Name)
+		data.Add("age", strconv.Itoa(u.Age))
+		data.Add("password", u.Password)
+		data.Add("role", u.Role)
 	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(val.Encode()))
+	w.Write([]byte(data.Encode()))
 	log.Println("✅ операция GetUsers - успешно выполнена")
 }
 
@@ -195,7 +198,7 @@ func (h *UserhandlerHTML) LoginUser(w http.ResponseWriter, r *http.Request) {
 		Path:  "/",
 	})
 
-	http.Redirect(w, r, "/app", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 	log.Println("✅ операция LoginUser - успешно выполнена")
 }
 
@@ -213,8 +216,9 @@ func (h *UserhandlerHTML) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	age, _ := strconv.Atoi(r.FormValue("age"))
 	password := r.FormValue("password")
+	role := r.FormValue("role")
 
-	user := models.User{Name: name, Age: age, Password: password}
+	user := models.User{Name: name, Age: age, Password: password, Role: role}
 
 	id, err := h.service.CreateUser(user)
 	if err != nil {
@@ -230,7 +234,7 @@ func (h *UserhandlerHTML) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		Path:  "/",
 	})
 
-	http.Redirect(w, r, "/app", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 	log.Println("✅ операция RegisterUser - успешно выполнена")
 }
 
@@ -244,6 +248,6 @@ func (h *UserhandlerHTML) LogoutUser(w http.ResponseWriter, r *http.Request) {
 		MaxAge: -1,
 	})
 
-	http.Redirect(w, r, "/app", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 	log.Println("✅ операция LogoutUser - успешно выполнена")
 }

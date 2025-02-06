@@ -40,13 +40,13 @@ func New() *Storage {
 func (s *Storage) CreateUser(user models.User) (int, error) {
 	const op = "internal.storage.postgres.CreateUser"
 
-	stmt, err := s.db.Prepare("INSERT INTO users(name, age, password) VALUES($1, $2, $3) RETURNING id")
+	stmt, err := s.db.Prepare("INSERT INTO users(name, age, password, role) VALUES($1, $2, $3, $4) RETURNING id")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return 0, err
 	}
 	var id int
-	err = stmt.QueryRow(user.Name, user.Age, user.Password).Scan(&id)
+	err = stmt.QueryRow(user.Name, user.Age, user.Password, user.Role).Scan(&id)
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return 0, err
@@ -58,13 +58,13 @@ func (s *Storage) CreateUser(user models.User) (int, error) {
 func (s *Storage) GetUser(id int) (*models.User, error) {
 	op := "internal.storage.postgres.GetUser"
 
-	row := s.db.QueryRow("SELECT id, name, age, password FROM users WHERE id = $1", id)
+	row := s.db.QueryRow("SELECT id, name, age, password, role FROM users WHERE id = $1", id)
 	if err := row.Err(); err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return nil, err
 	}
 	var user models.User
-	err := row.Scan(&user.ID, &user.Name, &user.Age, &user.Password)
+	err := row.Scan(&user.ID, &user.Name, &user.Age, &user.Password, &user.Role)
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return nil, err
@@ -76,7 +76,7 @@ func (s *Storage) GetUser(id int) (*models.User, error) {
 func (s *Storage) GetUsers() ([]models.User, error) {
 	op := "internal.storage.postgres.GetUsers"
 
-	rows, err := s.db.Query("SELECT id, name, age, password FROM users")
+	rows, err := s.db.Query("SELECT id, name, age, password, role FROM users")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return nil, err
@@ -84,7 +84,7 @@ func (s *Storage) GetUsers() ([]models.User, error) {
 	var users []models.User
 	var user models.User
 	for rows.Next() {
-		err := rows.Scan(&user.ID, &user.Name, &user.Age, &user.Password)
+		err := rows.Scan(&user.ID, &user.Name, &user.Age, &user.Password, &user.Role)
 		if err != nil {
 			log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 			return nil, err
@@ -127,14 +127,14 @@ func (s *Storage) DeleteUser(id int) error {
 func (s *Storage) GetUserByNameAndPassword(name, password string) (*models.User, error) {
 	const op = "internal.storage.postgres.GetUserByNameAndPassword"
 
-	row := s.db.QueryRow("SELECT id, name, age, password FROM users WHERE name = $1 AND password = $2", name, password)
+	row := s.db.QueryRow("SELECT id, name, age, password, role FROM users WHERE name = $1 AND password = $2", name, password)
 	if err := row.Err(); err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return nil, err
 	}
 
 	var user models.User
-	err := row.Scan(&user.ID, &user.Name, &user.Age, &user.Password)
+	err := row.Scan(&user.ID, &user.Name, &user.Age, &user.Password, &user.Role)
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		return nil, err
