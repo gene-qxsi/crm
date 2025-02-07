@@ -38,13 +38,12 @@
                 <td>{{.Name}}</td>
                 <td>{{.Age}}</td>
                 <td>{{.Password}}</td>
-                <!-- <td>********</td>  Пароль скрыт -->
             </tr>
             {{end}}
         </tbody>
     </table><br>
         {{if .IsAuthenticated}}
-        <button onclick="window.location.href='/logout'">Выйти</button>
+        <button onclick="window.location.href='/logout_view'">Выйти</button>
         {{end}}
 </body>
 </html>

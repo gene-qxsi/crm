@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+        footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-top: 0;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="container">
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" placeholder="Name" required><br>
+                <label for="age">Age:</label>
+                    <input type="number" name="age" id="age" placeholder="Age" required><br>
+                <label for="password">Password:</label>
+                    <input type="password" name="password" id="password" placeholder="Password" required><br>
+                <label for="role">Роль:</label>
+                    <select id="role" name="role">
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="USER">USER</option>
+                    </select><br>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/internal/static/js/register.js"></script>
+
+    <footer>
+        <p>© 2025 Приложение для управления пользователями. Все права защищены.</p>
+    </footer>
+
+</body>
+</html>

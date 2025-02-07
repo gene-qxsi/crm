@@ -16,6 +16,13 @@ type Userhandler struct {
 	service *services.UserService
 }
 
+type Response struct {
+	Status   string `json:"status"`
+	Message  string `json:"message"`
+	Error    string `json:"error"`
+	Redirect string `json:"redirect"`
+}
+
 func New(service *services.UserService) *Userhandler {
 	return &Userhandler{service: service}
 }
@@ -151,4 +158,106 @@ func (h *Userhandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 	log.Println("✅ операция DeleteUsers - успешно выполнена")
+}
+
+// СОМНИТЕЛЬНО НО ОКЕЙ
+func (h *Userhandler) RegisterUser(w http.ResponseWriter, r *http.Request) {
+	const op = "internal.http-server.handlers.user_handlers.RegisterUser"
+
+	if h.service == nil {
+		log.Printf("❌ ERROR: %s. PATH: %s\n", "h.service == nil", op)
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("h.service == nil"))
+		return
+	}
+
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
+		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "ошибка десериализации json документа", http.StatusUnauthorized)
+		return
+	}
+
+	id, err := h.service.CreateUser(user)
+	if err != nil {
+		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
+		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "не удалось создать учетную запись", http.StatusUnauthorized)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:  "session_id",
+		Value: fmt.Sprint(id),
+		Path:  "/",
+	})
+
+	response := Response{
+		Status:   "success",
+		Message:  "all success: user created!",
+		Redirect: "/",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+	log.Println("✅ операция RegisterUser - успешно выполнена")
+}
+
+func (h *Userhandler) LoginUser(w http.ResponseWriter, r *http.Request) {
+	const op = "internal.http-server.handlers.user_handlers.LoginUser"
+
+	if h.service == nil {
+		log.Printf("❌ ERROR: %s. PATH: %s\n", "h.service == nil", op)
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("h.service == nil"))
+		return
+	}
+
+	var user *models.User
+	json.NewDecoder(r.Body).Decode(&user)
+
+	user, err := h.service.GetUserByNameAndPassword(user.Name, user.Password)
+	if err != nil {
+		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
+		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "учетная запись не существует", http.StatusUnauthorized)
+		return
+	}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:  "session_id",
+		Value: fmt.Sprint(user.ID),
+		Path:  "/",
+	})
+
+	response := Response{
+		Status:   "success",
+		Message:  "ok",
+		Redirect: "/",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+	log.Println("✅ операция LoginUser - успешно выполнена")
+}
+
+func (h *Userhandler) LogoutUser(w http.ResponseWriter, r *http.Request) {
+	// const op = "internal.http-server.handlers.user_handlers.LogoutUser"
+
+	http.SetCookie(w, &http.Cookie{
+		Name:   "session_id",
+		MaxAge: -1,
+	})
+
+	response := Response{
+		Status:   "success",
+		Message:  "ok",
+		Redirect: "/",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+	log.Println("✅ операция LogoutUser - успешно выполнена")
 }

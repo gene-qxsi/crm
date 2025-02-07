@@ -33,7 +33,7 @@ func New(s *services.UserService) *Show {
 func (s *Show) ShowIndex(w http.ResponseWriter, r *http.Request) {
 	const op = "internal.http-server.handlers.show_handlers.show_handler.ShowIndex"
 
-	tmpl, err := template.ParseFiles("internal/pages/html/index.html")
+	tmpl, err := template.ParseFiles("internal/static/html/index.html")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		w.Write([]byte(err.Error()))
@@ -75,7 +75,7 @@ func (s *Show) ShowIndex(w http.ResponseWriter, r *http.Request) {
 
 func (s *Show) ShowRegister(w http.ResponseWriter, r *http.Request) {
 	const op = "internal.http-server.handlers.show_handlers.show_handler.ShowRegistration"
-	tmpl, err := template.ParseFiles("internal/pages/html/register.html")
+	tmpl, err := template.ParseFiles("internal/static/html/register.html")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		w.Write([]byte(err.Error()))
@@ -87,7 +87,7 @@ func (s *Show) ShowRegister(w http.ResponseWriter, r *http.Request) {
 
 func (s *Show) ShowAdminInfo(w http.ResponseWriter, r *http.Request) {
 	const op = "internal.http-server.handlers.show_handlers.show_handler.ShowAdminInfo"
-	tmpl, err := template.ParseFiles("internal/pages/html/admin_info.html")
+	tmpl, err := template.ParseFiles("internal/static/html/admin_info.html")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		w.Write([]byte(err.Error()))
@@ -115,19 +115,24 @@ func (s *Show) ShowAdminInfo(w http.ResponseWriter, r *http.Request) {
 
 func (s *Show) ShowLogin(w http.ResponseWriter, r *http.Request) {
 	const op = "internal.http-server.handlers.show_handlers.show_handler.ShowLogin"
-	tmpl, err := template.ParseFiles("internal/pages/html/login.html")
+	tmpl, err := template.ParseFiles("internal/static/html/login.html")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
-	tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
+		w.Write([]byte(err.Error()))
+		return
+	}
 }
 
 func (s *Show) ShowLogout(w http.ResponseWriter, r *http.Request) {
 	const op = "internal.http-server.handlers.show_handlers.show_handler.ShowLogout"
-	tmpl, err := template.ParseFiles("internal/pages/html/logout.html")
+	tmpl, err := template.ParseFiles("internal/static/html/logout.html")
 	if err != nil {
 		log.Printf("❌ ERROR: %s. PATH: %s\n", err, op)
 		w.Write([]byte(err.Error()))
