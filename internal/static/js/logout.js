@@ -2,7 +2,7 @@ document.getElementById("logoutForm").addEventListener("submit", function(event)
     event.preventDefault()
     
     const op = "internal.pages.js.registration.addEventListener"
-    fetch("/logout", {
+    fetch("/api/logout", {
         method: "POST"
     })
     .then(response => response.json())

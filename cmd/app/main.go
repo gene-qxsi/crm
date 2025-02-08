@@ -21,26 +21,27 @@ func main() {
 	setJSHandlers(router, uh)   // API json
 	setShowHandlers(router, sh) // show html pages
 
-	router.Handle("/internal/static/js/*", http.StripPrefix("/internal/static/js/", http.FileServer(http.Dir("internal/static/js"))))
+	// router.Handle("/internal/static/js/*", http.StripPrefix("/internal/static/js/", http.FileServer(http.Dir("internal/static/js"))))
 
 	http.ListenAndServe(":8080", router)
 
 }
 
 func setJSHandlers(router *chi.Mux, uh *user_handlers.Userhandler) {
-	router.Get("/users/{id}", uh.GetUser)
-	router.Get("/users", uh.GetUsers)
-	router.Post("/users", uh.CreateUser)
-	router.Post("/register", uh.RegisterUser)
-	router.Delete("/users/{id}", uh.DeleteUser)
-	router.Post("/login", uh.LoginUser)
-	router.Post("/logout", uh.LogoutUser)
+	router.Get("/api/users/{id}", uh.GetUser)
+	router.Get("/api/users", uh.GetUsers)
+	router.Post("/api/users", uh.CreateUser)
+	router.Post("/api/register", uh.RegisterUser)
+	router.Delete("/api/users/{id}", uh.DeleteUser)
+	router.Post("/api/login", uh.LoginUser)
+	router.Post("/api/logout", uh.LogoutUser)
 }
 
 func setShowHandlers(router *chi.Mux, sh *show_handlers.Show) {
-	router.Get("/", sh.ShowIndex)
-	router.Get("/register_view", sh.ShowRegister)
-	router.Get("/admin_info_view", sh.ShowAdminInfo)
-	router.Get("/login_view", sh.ShowLogin)
-	router.Get("/logout_view", sh.ShowLogout)
+
+	// router.Get("/", sh.ShowIndex)
+	// router.Get("/register", sh.ShowRegister)
+	// router.Get("/admin_info", sh.ShowAdminInfo)
+	// router.Get("/login", sh.ShowLogin)
+	// router.Get("/logout", sh.ShowLogout)
 }

@@ -70,22 +70,22 @@
                 <h2>Что делать дальше?</h2>
                 <p>Вы можете выбрать одно из следующих действий:</p>
                 <ul>
-                    <li><a href="/login_view">Войти в систему</a> — если у вас уже есть учетная запись.</li>
-                    <li><a href="/register_view">Зарегистрироваться</a> — если вы еще не зарегистрированы.</li>
+                    <li><a href="/login">Войти в систему</a> — если у вас уже есть учетная запись.</li>
+                    <li><a href="/register">Зарегистрироваться</a> — если вы еще не зарегистрированы.</li>
                 </ul>
             </div>
             {{if eq .Role "ADMIN"}}
             <div class="card">
                 <h2>Возможности Администратора:</h2>
                     <ul>
-                        <li><a href="/admin_info_view">Админ-панель</a></li>
+                        <li><a href="/admin_info">Админ-панель</a></li>
                     </ul>
             </div>
             {{end}}
             {{if .IsAuthenticated}}
             <div class="card">
                 <ul>
-                    <li><a href="/logout_view">Выйти</a></li>
+                    <li><a href="/logout">Выйти</a></li>
                 </ul>
             </div>
             {{end}}

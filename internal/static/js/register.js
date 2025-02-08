@@ -9,7 +9,7 @@ document.getElementById("registerForm").addEventListener("submit", function(even
         jsonData[key] = isNaN(value) ? value : Number(value)
     })
 
-    fetch("/register", {
+    fetch("/api/register", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(jsonData)
